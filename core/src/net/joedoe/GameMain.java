@@ -3,8 +3,6 @@ package net.joedoe;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import net.joedoe.entities.Player;
-import net.joedoe.helpers.GameManager;
 import net.joedoe.screens.Fight;
 
 public class GameMain extends Game {
@@ -13,9 +11,6 @@ public class GameMain extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        GameManager.getInstance().initializeGameData("joe doe", 0);
-        GameManager.storyStage = 8;
-        GameManager.player = new Player();
         setScreen(new Fight(this));
     }
 

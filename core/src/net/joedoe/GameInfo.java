@@ -11,7 +11,4 @@ public class GameInfo {
     public static final float[] GREEN = new float[] { 151 / 255f, 206 / 255f, 104 / 255f };;
     public static final float[] BLUE = new float[] { 75 / 255f, 166 / 255f, 224 / 255f };
     public static final float[] GREY = new float[] { 105 / 255f, 105 / 255f, 105 / 255f };
-    public static final String CONTROLS = "In the city:\nMove: arrow keys or w, a, s, d\n\n"
-            + "In fight:\nMove: arrow keys\nShoot: w, a, s, d\nChange weapon: numbers\n"
-            + "Reload: r\nEnd turn: e\n\nPause/Resume: p";
 }

@@ -14,16 +14,8 @@ public class Enemy extends Actor {
     public ManhattanHeuristic heuristic;
     public int pathIndex = 1;
 
-    public Enemy(String name, float x, float y, int health, int strength) {
-        texture = new Texture("entities/enemy.png");
-        this.name = name;
-        this.x = x;
-        this.y = y;
-        this.health = health;
-        this.strength = strength;
-        dexterity = 15;
-        intelligence = 10;
-        actionPoints = strength / 5;
+    public Enemy(String name, float x, float y, int strength) {
+        super(new Texture("entities/enemy.png"), name, x, y, strength);
         path = new DefaultGraphPath<Node>();
         heuristic = new ManhattanHeuristic();
     }

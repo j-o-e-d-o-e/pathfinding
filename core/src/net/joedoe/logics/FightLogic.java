@@ -2,26 +2,19 @@ package net.joedoe.logics;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 
 import net.joedoe.GameInfo;
 import net.joedoe.entities.Actor;
-import net.joedoe.entities.Bullet;
 import net.joedoe.entities.Enemy;
-import net.joedoe.entities.MovingEntity;
-import net.joedoe.entities.Player;
-import net.joedoe.helpers.GameManager;
 import net.joedoe.logics.pathfinding.GraphGenerator;
 import net.joedoe.logics.pathfinding.Node;
 
 public class FightLogic extends MapLogic {
 	private ArrayList<Enemy> enemies;
-	private ArrayList<Bullet> bullets;
 	private GraphGenerator graphGenerator;
 	private String message;
-	public Sound slap;
 	public int roundsLeft;
 
 	public FightLogic(String path) {
@@ -32,29 +25,34 @@ public class FightLogic extends MapLogic {
 	}
 
 	void initializePlayer() {
-		player = GameManager.player;
-		player.setX(GameInfo.WIDTH / 2f - 9 * GameInfo.ONE_TILE);
-		player.setY(GameInfo.HEIGHT - 8 * GameInfo.ONE_TILE);
-		player.setTexture("entities/player.png");
-		player.setActionPointsToDefault();
-		player.hasMoved = false;
+		float x = GameInfo.WIDTH / 2f - GameInfo.ONE_TILE * 19;
+		float y = GameInfo.HEIGHT - GameInfo.ONE_TILE * 13;
+		player = new Actor(new Texture("entities/player.png"),"Player", x, y, 8);
 	}
 
 	void initializeEnemies() {
 		enemies = new ArrayList<Enemy>();
-		for (int i = 0; i < 2; i++) {
-			String name = "Enemy " + (i + 1);
-			float x = GameInfo.WIDTH / 2f + 4 * GameInfo.ONE_TILE;
-			float y = GameInfo.HEIGHT - (9 + i * 2) * GameInfo.ONE_TILE;
-			int health = 50;
-			int strength = 25;
-			enemies.add(new Enemy(name, x, y, health, strength));
+		float x1 = GameInfo.WIDTH / 2f + GameInfo.ONE_TILE * 16;
+		float y1 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 15;
+		enemies.add(new Enemy("Enemy 1", x1, y1,6));
+		float x2 = GameInfo.WIDTH / 2f + GameInfo.ONE_TILE * 10;
+		float y2 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 7;
+		enemies.add(new Enemy("Enemy 2", x2, y2,6));	
+	}
+
+	public boolean collidesWithActor(Actor actor) {
+		float[] nextTile = getCoordinatesOfNextTile(actor);
+		for (Enemy enemy : enemies) {
+			if (nextTile[0] == enemy.getX() && nextTile[1] == enemy.getY()) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public void updateEnemies() {
 		for (Enemy enemy : enemies) {
-			if (!enemy.hasMoved && !enemy.isDead) {
+			if (!enemy.hasMoved) {
 				enemy.graph = graphGenerator.generateGraph(enemy, enemies);
 				enemy.pathfinder = new IndexedAStarPathFinder<Node>(enemy.graph, true);
 				Node start = enemy.graph.getNodeByCoordinates(enemy.getX(), enemy.getY());
@@ -69,7 +67,7 @@ public class FightLogic extends MapLogic {
 					} else if (nextNode.getY() * GameInfo.ONE_TILE < enemy.getY()) {
 						enemy.setDirection(3); // S
 					} else if (nextNode.getX() * GameInfo.ONE_TILE > enemy.getX()) {
-						enemy.setDirection(4); // O
+						enemy.setDirection(4); // E
 					}
 					// DISTANCE BETWEEN PLAYER & ENEMY:
 					int distance = 0;
@@ -87,13 +85,14 @@ public class FightLogic extends MapLogic {
 				}
 			} else {
 				if (enemiesHaveMoved() && enemy == enemies.get(enemies.size() - 1)) {
+					message = "wwww";
 					player.setHasMoved(false);
 				}
 			}
 		}
 	}
 
-	boolean enemiesHaveMoved() {
+	public boolean enemiesHaveMoved() {
 		for (Enemy enemy : enemies) {
 			if (!enemy.hasMoved) {
 				return false;
@@ -126,11 +125,6 @@ public class FightLogic extends MapLogic {
 		player.getTexture().dispose();
 		for (Enemy enemy : enemies) {
 			enemy.getTexture().dispose();
-		}
-		slap.dispose();
-		for (Bullet bullet : bullets) {
-			bullet.getShot().dispose();
-			bullet.getTexture().dispose();
 		}
 		map.dispose();
 	}
