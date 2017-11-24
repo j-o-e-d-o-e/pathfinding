@@ -7,6 +7,7 @@ import net.joedoe.GameMain;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Mice in a Maze";
 		new LwjglApplication(new GameMain(), config);
 	}
 }

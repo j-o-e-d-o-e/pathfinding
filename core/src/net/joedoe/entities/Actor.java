@@ -5,25 +5,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.joedoe.GameInfo;
 
-public class Actor {
+public abstract class Actor {
 	protected Texture texture;
 	protected float x, y;
 	protected int direction;
 	protected String name;
-	protected int strength, actionPoints;
 	public boolean hasMoved;
-	
-    public Actor(Texture texture, String name, float x, float y, int strength) {
-        this.texture = texture;
-        this.name = name;
-        this.x = x;
-        this.y = y;
-        this.strength = strength;
-        this.actionPoints = strength;
-    }
+
+	public Actor(Texture texture, String name, float x, float y, int strength) {
+		this.texture = texture;
+		this.name = name;
+		this.x = x;
+		this.y = y;
+	}
 
 	public void move() {
-		decreaseActionPointsBy(1);
 		switch (direction) {
 		case 1: // N
 			y += GameInfo.ONE_TILE;
@@ -43,7 +39,7 @@ public class Actor {
 				y = 0;
 			}
 			break;
-		case 4: // O
+		case 4: // E
 			x += GameInfo.ONE_TILE;
 			if (x > GameInfo.WIDTH - GameInfo.ONE_TILE) {
 				x = GameInfo.WIDTH - GameInfo.ONE_TILE;
@@ -52,29 +48,8 @@ public class Actor {
 		}
 	}
 
-	public void endTurn() {
-		decreaseActionPointsBy(actionPoints);
-	}
-
-	public boolean decreaseActionPointsBy(int amount) {
-		if (actionPoints >= amount) {
-			actionPoints -= amount;
-			if (actionPoints == 0) {
-				hasMoved = true;
-				if (this instanceof Enemy) {
-					setActionPointsToDefault();
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public void setHasMoved(boolean hasMoved) {
-		if (!hasMoved) {
-			setActionPointsToDefault();
-		}
-		this.hasMoved = hasMoved;
+	public void render(SpriteBatch batch) {
+		batch.draw(texture, x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
 	}
 
 	public String getName() {
@@ -83,22 +58,6 @@ public class Actor {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getStrength() {
-		return strength;
-	}
-
-	public int getActionPoints() {
-		return actionPoints;
-	}
-
-	public void setActionPointsToDefault() {
-		this.actionPoints = strength;
-	}
-
-	public void render(SpriteBatch batch) {
-		batch.draw(texture, x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
 	}
 
 	public Texture getTexture() {

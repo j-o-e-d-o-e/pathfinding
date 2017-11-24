@@ -7,7 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Array;
 
 import net.joedoe.GameInfo;
-import net.joedoe.entities.Enemy;
+import net.joedoe.entities.Mouse;
 
 public class GraphGenerator {
     private Array<Node> nodes = new Array<Node>();
@@ -18,7 +18,7 @@ public class GraphGenerator {
         int index = 0;
         mapWidth = map.getProperties().get("width", Integer.class); // 40
         mapHeight = map.getProperties().get("height", Integer.class); // 25
-        layer = (TiledMapTileLayer) map.getLayers().get("middle");
+        layer = (TiledMapTileLayer) map.getLayers().get("top");
         for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
                 nodes.add(new Node(x, y, index++));
@@ -26,8 +26,8 @@ public class GraphGenerator {
         }
     }
 
-    public Graph generateGraph(Enemy currentEnemy, ArrayList<Enemy> enemies) {
-        Array<Node> otherEnemies = getOtherEnemies(currentEnemy, enemies);
+    public Graph generateGraph(Mouse currentEnemy, ArrayList<Mouse> enemies) {
+        Array<Node> otherMice = getOtherEnemies(currentEnemy, enemies);
         for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
                 if (layer.getCell(x, y) == null) { // current cell is accessible
@@ -44,9 +44,9 @@ public class GraphGenerator {
                     if (layer.getCell((x + 1), y) == null && x != mapWidth - 1) { // O
                         currentNode.addConnection(nodes.get((x + 1) + mapWidth * y));
                     }
-                    if (otherEnemies.size != 0) {
-                        for (Node otherEnemy : otherEnemies) {
-                            if (currentNode.getIndex() == otherEnemy.getIndex()) {
+                    if (otherMice.size != 0) {
+                        for (Node otherMouse : otherMice) {
+                            if (currentNode.getIndex() == otherMouse.getIndex()) {
                                 currentNode.getConnections().clear();
                             }
                         }
@@ -57,15 +57,15 @@ public class GraphGenerator {
         return new Graph(nodes);
     }
 
-    Array<Node> getOtherEnemies(Enemy currentEnemy, ArrayList<Enemy> enemies) {
-        Array<Node> otherEnemies = new Array<Node>();
-        for (Enemy enemy : enemies) {
-            if (enemy != currentEnemy) {
-                int index = (int) enemy.getX() / GameInfo.ONE_TILE + mapWidth * (int) enemy.getY() / GameInfo.ONE_TILE;
-                otherEnemies.add(nodes.get(index));
+    Array<Node> getOtherEnemies(Mouse currentMouse, ArrayList<Mouse> mice) {
+        Array<Node> otherMice = new Array<Node>();
+        for (Mouse mouse : mice) {
+            if (mouse != currentMouse) {
+                int index = (int) mouse.getX() / GameInfo.ONE_TILE + mapWidth * (int) mouse.getY() / GameInfo.ONE_TILE;
+                otherMice.add(nodes.get(index));
             }
         }
-        return otherEnemies;
+        return otherMice;
     }
 
     public Array<Node> getNodes() {
