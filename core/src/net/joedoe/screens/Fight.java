@@ -41,6 +41,9 @@ public class Fight extends MyScreen {
 			}
 			if (fight.nextTileIsAccessible(fight.getPlayer()) && !fight.collidesWithActor(fight.getPlayer())) {
 				fight.getPlayer().move();
+				String playerXY = (int) fight.getPlayer().getX() / GameInfo.ONE_TILE + "/"
+						+ (int) fight.getPlayer().getY() / GameInfo.ONE_TILE;
+				fight.setPlayerXY(playerXY);
 			}
 		} else if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 			fight.getPlayer().endTurn();
@@ -53,7 +56,7 @@ public class Fight extends MyScreen {
 			for (Enemy enemy : fight.getEnemies()) {
 				enemy.hasMoved = false;
 			}
-		} else if (enemyTimer >= 0.2) {
+		} else if (enemyTimer >= 0.3) {
 			fight.updateEnemies();
 			enemyTimer = 0;
 		}
