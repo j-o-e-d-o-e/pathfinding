@@ -20,7 +20,6 @@ public class MazeLogic {
 	private GraphGenerator graphGenerator;
 	private String cheeseXY, mouse1XY, mouse2XY;
 	private float cheeseX, cheeseY;
-	public int roundsLeft;
 
 	public MazeLogic(String path) {
 		map = new TmxMapLoader().load(path);
@@ -37,11 +36,20 @@ public class MazeLogic {
 		mouse1XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/" + (int) mouse.getY() / GameInfo.ONE_TILE;
 		float x2 = GameInfo.WIDTH / 2f + GameInfo.ONE_TILE * 19;
 		float y2 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 2;
-		mouse = new Mouse("Brain", x2, y2, 6);
-		mice.add(new Mouse("Brain", x2, y2, 6));
+		mouse = new Mouse("The Brain", x2, y2, 6);
+		mice.add(mouse);
 		mouse2XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/" + (int) mouse.getY() / GameInfo.ONE_TILE;
 	}
-	
+
+	public boolean tileIsAccessible(int tileX, int tileY) {
+		Cell cell = ((TiledMapTileLayer) map.getLayers().get("top")).getCell(tileX, tileY);
+		if (cell == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean nextTileIsAccessible(Actor actor) {
 		float[] nextTile = getCoordinatesOfNextTile(actor);
 		Cell cell = ((TiledMapTileLayer) map.getLayers().get("top")).getCell((int) nextTile[0] / GameInfo.ONE_TILE,
@@ -72,10 +80,19 @@ public class MazeLogic {
 		return nextTile;
 	}
 
+	public boolean collidesWithActor(float x, float y) {
+		for (Mouse mouse : mice) {
+			if (x == mouse.getX() && y == mouse.getY()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean collidesWithActor(Actor actor) {
 		float[] nextTile = getCoordinatesOfNextTile(actor);
-		for (Mouse enemy : mice) {
-			if (nextTile[0] == enemy.getX() && nextTile[1] == enemy.getY()) {
+		for (Mouse mouse : mice) {
+			if (nextTile[0] == mouse.getX() && nextTile[1] == mouse.getY()) {
 				return true;
 			}
 		}
@@ -93,13 +110,13 @@ public class MazeLogic {
 					Node nextNode = mouse.getNextNode();
 					// SET DIRECTION:
 					if (nextNode.getY() * GameInfo.ONE_TILE > mouse.getY()) {
-						mouse.setDirection(1); // N
+						mouse.setDirection(0); // N
 					} else if (nextNode.getX() * GameInfo.ONE_TILE < mouse.getX()) {
-						mouse.setDirection(2); // W
+						mouse.setDirection(1); // W
 					} else if (nextNode.getY() * GameInfo.ONE_TILE < mouse.getY()) {
-						mouse.setDirection(3); // S
+						mouse.setDirection(2); // S
 					} else if (nextNode.getX() * GameInfo.ONE_TILE > mouse.getX()) {
-						mouse.setDirection(4); // E
+						mouse.setDirection(3); // E
 					}
 					// DISTANCE BETWEEN CHEESE & MOUSE:
 					int distance = 0;
@@ -109,10 +126,10 @@ public class MazeLogic {
 					if (distance > 1) {
 						mouse.move();
 						mouse.pathIndex++;
-						if (mouse.getName() == "Pinky") {
+						if (mouse == mice.get(0)) {
 							mouse1XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/"
 									+ (int) mouse.getY() / GameInfo.ONE_TILE;
-						} else if (mouse.getName() == "Brain") {
+						} else if (mouse == mice.get(1)) {
 							mouse2XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/"
 									+ (int) mouse.getY() / GameInfo.ONE_TILE;
 						}
@@ -124,7 +141,7 @@ public class MazeLogic {
 				}
 			} else {
 				if (miceHaveMoved() && mouse == mice.get(mice.size() - 1)) {
-					System.out.println("MICE HAVE MOVED.");
+					GameInfo.cheeseIsSet = false;
 				}
 			}
 		}
@@ -150,7 +167,7 @@ public class MazeLogic {
 	public void setGraphGenerator(GraphGenerator graphGenerator) {
 		this.graphGenerator = graphGenerator;
 	}
-	
+
 	public TiledMap getMap() {
 		return map;
 	}
@@ -163,6 +180,22 @@ public class MazeLogic {
 		this.cheeseXY = cheeseXY;
 	}
 
+	public float getCheeseX() {
+		return cheeseX;
+	}
+
+	public void setCheeseX(float cheeseX) {
+		this.cheeseX = cheeseX;
+	}
+
+	public float getCheeseY() {
+		return cheeseY;
+	}
+
+	public void setCheeseY(float cheeseY) {
+		this.cheeseY = cheeseY;
+	}
+
 	public String getMouse1XY() {
 		return mouse1XY;
 	}
@@ -172,9 +205,6 @@ public class MazeLogic {
 	}
 
 	public void dispose() {
-		for (Mouse mouse : mice) {
-			mouse.getTexture().dispose();
-		}
 		map.dispose();
 	}
 }
