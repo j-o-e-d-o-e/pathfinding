@@ -26,10 +26,6 @@ public class Mouse extends Entity {
         return pathfinder.searchNodePath(startNode, endNode, heuristic, path);
     }
 
-    public Node getCurrentNode() {
-        return path.nodes.get(pathIndex - 1);
-    }
-
     public Node getNextNode() {
         return path.nodes.get(pathIndex);
     }
