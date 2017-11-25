@@ -21,16 +21,6 @@ public class Node implements Connection<Node> {
 		connections = new Array<Connection<Node>>();
 	}
 
-	public void addConnection(Node node) {
-		if (node != null) { // Make sure there is a neighboring node
-			connections.add(new DefaultConnection<Node>(this, node));
-		}
-	}
-
-	public Array<Connection<Node>> getConnections() {
-		return connections;
-	}
-
 	public void render(ShapeRenderer shapeRenderer, Color color) {
 		int x = this.x * GameInfo.ONE_TILE;
 		int y = this.y * GameInfo.ONE_TILE;
@@ -51,6 +41,16 @@ public class Node implements Connection<Node> {
 
 	public int getIndex() {
 		return index;
+	}
+	
+	public void addConnection(Node node) {
+		if (node != null) { // Make sure there is a neighboring node
+			connections.add(new DefaultConnection<Node>(this, node));
+		}
+	}
+
+	public Array<Connection<Node>> getConnections() {
+		return connections;
 	}
 
 	@Override

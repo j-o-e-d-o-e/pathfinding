@@ -76,10 +76,6 @@ public abstract class Entity {
 		return y;
 	}
 
-	public int getDirection() {
-		return direction;
-	}
-
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
