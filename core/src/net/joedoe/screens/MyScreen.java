@@ -45,8 +45,4 @@ public abstract class MyScreen implements Screen {
     public void hide() {
         // TODO Auto-generated method stub
     }
-
-    public abstract void render(float delta);
-
-    public abstract void dispose();
 }

@@ -3,42 +3,50 @@ package net.joedoe.logics;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import net.joedoe.GameInfo;
-import net.joedoe.entities.Actor;
 import net.joedoe.entities.Mouse;
 import net.joedoe.logics.pathfinding.GraphGenerator;
 import net.joedoe.logics.pathfinding.Node;
 
 public class MazeLogic {
 	private TiledMap map;
-	private ArrayList<Mouse> mice;
 	private GraphGenerator graphGenerator;
-	private String cheeseXY, mouse1XY, mouse2XY;
-	private float cheeseX, cheeseY;
+	private ArrayList<Mouse> mice;
+	private Texture textureCheese;
+	private float[] cheese;
 
 	public MazeLogic(String path) {
 		map = new TmxMapLoader().load(path);
 		graphGenerator = new GraphGenerator(map);
+		textureCheese = new Texture("entities/cheese.png");
 		initializeMice();
 	}
 
 	void initializeMice() {
 		mice = new ArrayList<Mouse>();
 		float x1 = GameInfo.WIDTH / 2f + GameInfo.ONE_TILE * 19;
-		float y1 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 22;
-		Mouse mouse = new Mouse("Pinky", x1, y1, 6);
-		mice.add(mouse);
-		mouse1XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/" + (int) mouse.getY() / GameInfo.ONE_TILE;
+		float y1 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 21;
+		mice.add(new Mouse("Pinky", x1, y1));
 		float x2 = GameInfo.WIDTH / 2f + GameInfo.ONE_TILE * 19;
 		float y2 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 2;
-		mouse = new Mouse("The Brain", x2, y2, 6);
-		mice.add(mouse);
-		mouse2XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/" + (int) mouse.getY() / GameInfo.ONE_TILE;
+		mice.add(new Mouse("The Brain", x2, y2));
+	}
+
+	public void setCheese(float x, float y) {
+		int tileX = (int) x / GameInfo.ONE_TILE;
+		int tileY = (int) y / GameInfo.ONE_TILE;
+		float px_X = (int) (x / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
+		float px_Y = (int) (y / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
+		if (tileIsAccessible(tileX, tileY) && !collidesWithMouse(px_X, px_Y)) {
+			cheese = new float[] { px_X, px_Y };
+			GameInfo.cheeseIsSet = true;
+		}
 	}
 
 	public boolean tileIsAccessible(int tileX, int tileY) {
@@ -50,49 +58,9 @@ public class MazeLogic {
 		}
 	}
 
-	public boolean nextTileIsAccessible(Actor actor) {
-		float[] nextTile = getCoordinatesOfNextTile(actor);
-		Cell cell = ((TiledMapTileLayer) map.getLayers().get("top")).getCell((int) nextTile[0] / GameInfo.ONE_TILE,
-				(int) nextTile[1] / GameInfo.ONE_TILE);
-		if (cell == null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public float[] getCoordinatesOfNextTile(Actor actor) {
-		float[] nextTile = new float[] { actor.getX(), actor.getY() };
-		switch (actor.getDirection()) {
-		case 1: // N
-			nextTile[1] += GameInfo.ONE_TILE;
-			break;
-		case 2: // W
-			nextTile[0] -= GameInfo.ONE_TILE;
-			break;
-		case 3: // S
-			nextTile[1] -= GameInfo.ONE_TILE;
-			break;
-		case 4: // E
-			nextTile[0] += GameInfo.ONE_TILE;
-			break;
-		}
-		return nextTile;
-	}
-
-	public boolean collidesWithActor(float x, float y) {
+	public boolean collidesWithMouse(float x, float y) {
 		for (Mouse mouse : mice) {
 			if (x == mouse.getX() && y == mouse.getY()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean collidesWithActor(Actor actor) {
-		float[] nextTile = getCoordinatesOfNextTile(actor);
-		for (Mouse mouse : mice) {
-			if (nextTile[0] == mouse.getX() && nextTile[1] == mouse.getY()) {
 				return true;
 			}
 		}
@@ -105,7 +73,7 @@ public class MazeLogic {
 				mouse.graph = graphGenerator.generateGraph(mouse, mice);
 				mouse.pathfinder = new IndexedAStarPathFinder<Node>(mouse.graph, true);
 				Node start = mouse.graph.getNodeByCoordinates(mouse.getX(), mouse.getY());
-				Node end = mouse.graph.getNodeByCoordinates(cheeseX, cheeseY);
+				Node end = mouse.graph.getNodeByCoordinates(cheese[0], cheese[1]);
 				if (mouse.calculatePath(start, end)) {
 					Node nextNode = mouse.getNextNode();
 					// SET DIRECTION:
@@ -126,21 +94,17 @@ public class MazeLogic {
 					if (distance > 1) {
 						mouse.move();
 						mouse.pathIndex++;
-						if (mouse == mice.get(0)) {
-							mouse1XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/"
-									+ (int) mouse.getY() / GameInfo.ONE_TILE;
-						} else if (mouse == mice.get(1)) {
-							mouse2XY = (int) mouse.getX() / GameInfo.ONE_TILE + "/"
-									+ (int) mouse.getY() / GameInfo.ONE_TILE;
-						}
 					} else {
-						mouse.hasMoved = true;
+						for (Mouse m : mice) {
+							m.hasMoved = true;
+						}
+						GameInfo.cheeseIsSet = false;
 					}
 				} else {
 					mouse.hasMoved = true;
 				}
 			} else {
-				if (miceHaveMoved() && mouse == mice.get(mice.size() - 1)) {
+				if (miceHaveMoved()) {
 					GameInfo.cheeseIsSet = false;
 				}
 			}
@@ -156,55 +120,24 @@ public class MazeLogic {
 		return true;
 	}
 
-	public ArrayList<Mouse> getMice() {
-		return mice;
-	}
-
-	public GraphGenerator getGraphGenerator() {
-		return graphGenerator;
-	}
-
-	public void setGraphGenerator(GraphGenerator graphGenerator) {
-		this.graphGenerator = graphGenerator;
-	}
-
 	public TiledMap getMap() {
 		return map;
 	}
 
-	public String getCheeseXY() {
-		return cheeseXY;
+	public ArrayList<Mouse> getMice() {
+		return mice;
 	}
 
-	public void setCheeseXY(String cheeseXY) {
-		this.cheeseXY = cheeseXY;
+	public Texture getTextureCheese() {
+		return textureCheese;
 	}
 
-	public float getCheeseX() {
-		return cheeseX;
-	}
-
-	public void setCheeseX(float cheeseX) {
-		this.cheeseX = cheeseX;
-	}
-
-	public float getCheeseY() {
-		return cheeseY;
-	}
-
-	public void setCheeseY(float cheeseY) {
-		this.cheeseY = cheeseY;
-	}
-
-	public String getMouse1XY() {
-		return mouse1XY;
-	}
-
-	public String getMouse2XY() {
-		return mouse2XY;
+	public float[] getCheese() {
+		return cheese;
 	}
 
 	public void dispose() {
 		map.dispose();
+		textureCheese.dispose();
 	}
 }
