@@ -13,14 +13,6 @@ public class Graph implements IndexedGraph<Node> {
         this.nodes = nodes;
     }
 
-    public Node getNode(int index) {
-        return nodes.get(index);
-    }
-
-    public Array<Node> getNodes() {
-        return nodes;
-    }
-
     public Node getNodeByCoordinates(float x, float y) {
         return nodes.get((int) x / GameInfo.ONE_TILE + GraphGenerator.mapWidth * (int) y / GameInfo.ONE_TILE);
     }
@@ -38,9 +30,5 @@ public class Graph implements IndexedGraph<Node> {
     @Override
     public int getNodeCount() {
         return nodes.size;
-    }
-
-    public void addNode(Node node) {
-        nodes.add(node);
     }
 }

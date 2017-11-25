@@ -16,8 +16,8 @@ public class GraphGenerator {
 
     public GraphGenerator(TiledMap map) {
         int index = 0;
-        mapWidth = map.getProperties().get("width", Integer.class); // 40
-        mapHeight = map.getProperties().get("height", Integer.class); // 25
+        mapWidth = map.getProperties().get("width", Integer.class);
+        mapHeight = map.getProperties().get("height", Integer.class);
         layer = (TiledMapTileLayer) map.getLayers().get("top");
         for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
@@ -41,7 +41,7 @@ public class GraphGenerator {
                     if (layer.getCell(x, (y - 1)) == null && y != 0) { // S
                         currentNode.addConnection(nodes.get(x + mapWidth * (y - 1)));
                     }
-                    if (layer.getCell((x + 1), y) == null && x != mapWidth - 1) { // O
+                    if (layer.getCell((x + 1), y) == null && x != mapWidth - 1) { // E
                         currentNode.addConnection(nodes.get((x + 1) + mapWidth * y));
                     }
                     if (otherMice.size != 0) {
@@ -66,13 +66,5 @@ public class GraphGenerator {
             }
         }
         return otherMice;
-    }
-
-    public Array<Node> getNodes() {
-        return nodes;
-    }
-
-    public void setNodes(Array<Node> nodes) {
-        this.nodes = nodes;
     }
 }
