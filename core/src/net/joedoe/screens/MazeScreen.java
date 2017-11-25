@@ -30,7 +30,7 @@ public class MazeScreen extends MyScreen {
 		mazeLogic = new MazeLogic("maps/maze.tmx");
 		hud = new MazeHud(this.game, mazeLogic);
 		renderer = new OrthogonalTiledMapRenderer(mazeLogic.getMap());
-		cursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("entities/cheese.png")), 0, 31);
+		cursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("entities/cheese.png")), 15, 15);
 	}
 
 	void handleInput() {
