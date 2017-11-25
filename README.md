@@ -1,5 +1,5 @@
 # pathfinding
-# What?
+# What? #
 Simple implementation of the libGDX a* star pathfinding module.
-# For whom?
-Since I struggled myself 
+# For whom? #
+
