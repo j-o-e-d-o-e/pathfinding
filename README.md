@@ -1,4 +1,4 @@
-# pathfinding
+# pathfinding_example
 
 Simple implementation of the libGDX a* star pathfinding module. It generates a path for each of the two (or possibly more) entities taking the current position of the other entities into consideration. So basically, just two mice looking for cheese... 
 
