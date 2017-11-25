@@ -3,7 +3,7 @@ package net.joedoe;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import net.joedoe.screens.Maze;
+import net.joedoe.screens.MazeScreen;
 
 public class GameMain extends Game {
     private SpriteBatch batch;
@@ -11,7 +11,7 @@ public class GameMain extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        setScreen(new Maze(this));
+        setScreen(new MazeScreen(this));
     }
 
     @Override
