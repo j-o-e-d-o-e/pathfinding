@@ -7,15 +7,15 @@ import net.joedoe.logics.pathfinding.Graph;
 import net.joedoe.logics.pathfinding.ManhattanHeuristic;
 import net.joedoe.logics.pathfinding.Node;
 
-public class Mouse extends Actor {
+public class Mouse extends Entity {
 	public Graph graph;
     public DefaultGraphPath<Node> path;
     public IndexedAStarPathFinder<Node> pathfinder;
     public ManhattanHeuristic heuristic;
     public int pathIndex = 1;
 
-    public Mouse(String name, float x, float y, int strength) {
-        super("entities/mouse.png", name, x, y, strength);
+    public Mouse(String name, float x, float y) {
+        super("entities/mouse.png", name, x, y);
         path = new DefaultGraphPath<Node>();
         heuristic = new ManhattanHeuristic();
     }
@@ -32,12 +32,5 @@ public class Mouse extends Actor {
 
     public Node getNextNode() {
         return path.nodes.get(pathIndex);
-    }
-
-    public Node getAfterNextNode() {
-        if (path.nodes.size > pathIndex + 1) {
-            return path.nodes.get(pathIndex + 1);
-        }
-        return null;
     }
 }

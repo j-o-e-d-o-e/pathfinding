@@ -7,21 +7,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import net.joedoe.GameInfo;
 
-public abstract class Actor {
+public abstract class Entity {
 	protected Animation<TextureRegion>[] texture;
 	protected float x, y;
 	protected int direction = 1;
 	protected String name;
 	public boolean hasMoved;
 
-	public Actor(String path, String name, float x, float y, int strength) {
+	public Entity(String path, String name, float x, float y) {
 		this.texture = initializeTextureRegion(path);
 		this.name = name;
 		this.x = x;
 		this.y = y;
 	}
 
-	Animation<TextureRegion>[] initializeTextureRegion(String path) {
+	private Animation<TextureRegion>[] initializeTextureRegion(String path) {
 		TextureRegion[][] textureRegions = TextureRegion.split(new Texture(path), 38, 26);
 		@SuppressWarnings("unchecked")
 		Animation<TextureRegion>[] animation = new Animation[textureRegions.length];
@@ -68,28 +68,12 @@ public abstract class Actor {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Animation<TextureRegion>[] getTexture() {
-		return texture;
-	}
-
 	public float getX() {
 		return x;
 	}
 
-	public void setX(float x) {
-		this.x = x;
-	}
-
 	public float getY() {
 		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
 	}
 
 	public int getDirection() {
