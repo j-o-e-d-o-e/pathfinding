@@ -98,6 +98,14 @@ public class MazeScreen extends MyScreen {
 		for (Node node : mazeLogic.getMice().get(1).path) {
 			node.render(shapeRenderer, Color.YELLOW);
 		}
+//		// PATH OF MOUSE_3 IN BLUE
+//		for (Node node : mazeLogic.getMice().get(2).path) {
+//			node.render(shapeRenderer, Color.BLUE);
+//		}
+//		// PATH OF MOUSE_4 IN GREEN
+//		for (Node node : mazeLogic.getMice().get(3).path) {
+//			node.render(shapeRenderer, Color.GREEN);
+//		}
 		shapeRenderer.end();
 	}
 

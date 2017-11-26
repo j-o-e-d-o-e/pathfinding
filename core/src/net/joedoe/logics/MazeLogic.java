@@ -36,6 +36,12 @@ public class MazeLogic {
 		float x2 = GameInfo.WIDTH / 2f + GameInfo.ONE_TILE * 19;
 		float y2 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 2;
 		mice.add(new Mouse("The Brain", x2, y2));
+//		float x3 = GameInfo.WIDTH / 2f - GameInfo.ONE_TILE * 19;
+//		float y3 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 2;
+//		mice.add(new Mouse("Mouse 3", x3, y3));
+//		float x4 = GameInfo.WIDTH / 2f - GameInfo.ONE_TILE * 19;
+//		float y4 = GameInfo.HEIGHT - GameInfo.ONE_TILE * 21;
+//		mice.add(new Mouse("Mouse 4", x4, y4));
 	}
 
 	public void setCheese(float x, float y) {
