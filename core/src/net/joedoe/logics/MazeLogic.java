@@ -97,6 +97,7 @@ public class MazeLogic {
 					for (int i = mouse.pathIndex - 1; i < mouse.path.getCount() - 1; i++) {
 						distance++;
 					}
+					// DECISION MAKING:
 					if (distance > 1) {
 						mouse.move();
 						mouse.pathIndex++;
