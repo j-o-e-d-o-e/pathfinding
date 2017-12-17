@@ -15,12 +15,11 @@ public class GraphGenerator {
 	public static int mapWidth, mapHeight;
 
 	public GraphGenerator(TiledMap map) {
+		layer = (TiledMapTileLayer) map.getLayers().get("top");
+		// create a basic array which contains a node for each tile on the map:
 		int index = 0;
-		// create a basic array according to mapWidth & mapHeight
-		// to which generateGraph() then adds accessible nodes
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
-		layer = (TiledMapTileLayer) map.getLayers().get("top");
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
 				nodes.add(new Node(x, y, index++));
@@ -33,6 +32,8 @@ public class GraphGenerator {
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
 				if (layer.getCell(x, y) == null) { // current cell is accessible
+					// get the current node from Array<Node> nodes
+					// and add connections to neighboring nodes:
 					Node currentNode = nodes.get(x + mapWidth * y);
 					if (layer.getCell(x, (y + 1)) == null && y != mapHeight - 1) { // N
 						currentNode.addConnection(nodes.get(x + mapWidth * (y + 1)));
