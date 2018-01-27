@@ -4,5 +4,5 @@ Simple implementation of the libGDX a* star pathfinding module. It generates a p
 
 ![screenshot](https://user-images.githubusercontent.com/26798159/33233398-f305924e-d215-11e7-9c31-9a6b5a7c7d9b.JPG)
 
-## Material
-<a href="https://youtu.be/wu3vzR9k3QA">Tutorial</a> by "Let's Make An Indie Game"
+## Materials
+- <a href="https://youtu.be/wu3vzR9k3QA">Tutorial</a> by "Let's Make An Indie Game"
