@@ -1,4 +1,4 @@
-package net.joedoe.logics.pathfinding;
+package net.joedoe.pathfinding;
 
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
@@ -7,9 +7,9 @@ import com.badlogic.gdx.utils.Array;
 import net.joedoe.GameInfo;
 
 public class Graph implements IndexedGraph<Node> {
-    private Array<Node> nodes = new Array<Node>();
+    private Array<Node> nodes;
 
-    public Graph(Array<Node> nodes) {
+    Graph(Array<Node> nodes) {
         this.nodes = nodes;
     }
 

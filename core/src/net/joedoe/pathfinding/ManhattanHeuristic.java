@@ -1,4 +1,4 @@
-package net.joedoe.logics.pathfinding;
+package net.joedoe.pathfinding;
 
 import com.badlogic.gdx.ai.pfa.Heuristic;
 
