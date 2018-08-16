@@ -2,10 +2,12 @@ package net.joedoe.entities;
 
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import net.joedoe.GameInfo;
 import net.joedoe.pathfinding.Graph;
 import net.joedoe.pathfinding.ManhattanHeuristic;
@@ -100,6 +102,12 @@ public class Mouse {
 
     public void render(SpriteBatch batch, float elapsedTime) {
         batch.draw(texture[direction - 1].getKeyFrame(elapsedTime, true), x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
+    }
+
+    public void renderPath(ShapeRenderer shapeRenderer, Color color){
+        for (Node node : path) {
+            node.render(shapeRenderer, color);
+        }
     }
 
     public String getName() {

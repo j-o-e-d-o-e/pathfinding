@@ -11,7 +11,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.joedoe.GameInfo;
 import net.joedoe.entities.Mouse;
 import net.joedoe.pathfinding.GraphGenerator;
-import net.joedoe.pathfinding.Node;
 
 import java.util.ArrayList;
 
@@ -108,15 +107,11 @@ public class MazeController {
         }
     }
 
-    public void renderMicePath(ShapeRenderer shapeRenderer){
+    public void renderMicePath(ShapeRenderer shapeRenderer) {
         Mouse mouse1 = mice.get(0);
-        for (Node node : mouse1.getPath()) {
-            node.render(shapeRenderer, Color.RED);
-        }
+        mouse1.renderPath(shapeRenderer, Color.RED);
         Mouse mouse2 = mice.get(1);
-        for (Node node : mouse2.getPath()) {
-            node.render(shapeRenderer, Color.YELLOW);
-        }
+        mouse2.renderPath(shapeRenderer, Color.YELLOW);
     }
 
     public TiledMap getMap() {
