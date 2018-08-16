@@ -1,6 +1,9 @@
 package net.joedoe.controllers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -8,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.joedoe.GameInfo;
 import net.joedoe.entities.Mouse;
 import net.joedoe.pathfinding.GraphGenerator;
+import net.joedoe.pathfinding.Node;
 
 import java.util.ArrayList;
 
@@ -74,7 +78,7 @@ public class MazeController {
                     if (mouse.getDistance() > 1)
                         mouse.move();
                     else
-                        setMiceHaveMoved();
+                        setMiceMoved(true);
                 } else {
                     mouse.setMoved(true);
                 }
@@ -84,9 +88,9 @@ public class MazeController {
         }
     }
 
-    private void setMiceHaveMoved() {
+    public void setMiceMoved(boolean moved) {
         for (Mouse mouse : mice)
-            mouse.setMoved(true);
+            mouse.setMoved(moved);
         GameInfo.cheeseIsSet = false;
     }
 
@@ -96,6 +100,23 @@ public class MazeController {
                 return false;
         }
         return true;
+    }
+
+    public void renderMice(SpriteBatch batch, float elapsedTime) {
+        for (Mouse mouse : mice) {
+            mouse.render(batch, elapsedTime);
+        }
+    }
+
+    public void renderMicePath(ShapeRenderer shapeRenderer){
+        Mouse mouse1 = mice.get(0);
+        for (Node node : mouse1.getPath()) {
+            node.render(shapeRenderer, Color.RED);
+        }
+        Mouse mouse2 = mice.get(1);
+        for (Node node : mouse2.getPath()) {
+            node.render(shapeRenderer, Color.YELLOW);
+        }
     }
 
     public TiledMap getMap() {
