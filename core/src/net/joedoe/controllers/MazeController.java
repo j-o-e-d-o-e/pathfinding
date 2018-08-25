@@ -46,7 +46,7 @@ public class MazeController {
     }
 
     public void setCheese(float x, float y) {
-        float cheeseX = ((int) x / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
+        float cheeseX = ((int) x / GameInfo.ONE_TILE) * GameInfo.ONE_TILE; // todo
         float cheeseY = ((int) y / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
         if (mapController.currentTileIsAccessible(x, y) && !collides(cheeseX, cheeseY)) {
             cheese = new float[]{cheeseX, cheeseY};
@@ -89,12 +89,12 @@ public class MazeController {
         }
     }
 
-    private void setMiceMoved(boolean moved) {
+    private void setMiceMoved(boolean moved) { // todo
         for (Mouse mouse : mice)
             mouse.setMoved(moved);
     }
 
-    private boolean getMiceHaveMoved() {
+    private boolean getMiceHaveMoved() { // todo
         for (Mouse mouse : mice) {
             if (!mouse.hasMoved())
                 return false;
