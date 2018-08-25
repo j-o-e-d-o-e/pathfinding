@@ -48,14 +48,15 @@ public class MazeController {
     public void setCheese(float x, float y) {
         float cheeseX = ((int) x / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
         float cheeseY = ((int) y / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
-        if (mapController.currentTileIsAccessible(x, y) && !collidesWithMouse(cheeseX, cheeseY)) {
+        if (mapController.currentTileIsAccessible(x, y) && !collides(cheeseX, cheeseY)) {
             cheese = new float[]{cheeseX, cheeseY};
             GameInfo.cheeseIsSet = true;
             setMiceMoved(false);
         }
     }
 
-    private boolean collidesWithMouse(float x, float y) {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean collides(float x, float y) {
         for (Mouse mouse : mice) {
             if (x == mouse.getX() && y == mouse.getY())
                 return true;
@@ -72,10 +73,13 @@ public class MazeController {
                 if (pathfinder.searchNodePath(startNode, endNode, heuristic, path)) {
                     mouse.setPath(path);
                     mouse.setDirection();
-                    if (mouse.getDistance() > 1)
+                    float[] nextTile = mapController.getCoordinatesOfNextTile(mouse);
+                    if (mouse.getDistance() > 1 && !collides(nextTile[0], nextTile[1]))
                         mouse.move();
-                    else
+                    else if (mouse.getDistance() == 1)
                         setMiceMoved(true);
+                    else
+                        mouse.setMoved(true);
                 } else {
                     mouse.setMoved(true);
                 }
