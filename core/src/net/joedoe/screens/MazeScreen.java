@@ -3,11 +3,8 @@ package net.joedoe.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -27,8 +24,8 @@ public class MazeScreen implements Screen {
     private MazeController controller;
     private Panel panel;
     private Cursor cursor;
+    private Texture cheese;
     private float mouseTimer, elapsedTime;
-
 
     public MazeScreen(GameMain game) {
         this.game = game;
@@ -40,6 +37,7 @@ public class MazeScreen implements Screen {
         panel = new Panel(this.game);
         renderer = new OrthogonalTiledMapRenderer(controller.getMap());
         cursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("entities/cheese.png")), 15, 15);
+        cheese = new Texture("entities/cheese.png");
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getBatch().getProjectionMatrix());
     }
@@ -50,8 +48,6 @@ public class MazeScreen implements Screen {
                 Vector3 vector = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
                 camera.unproject(vector);
                 controller.setCheese(vector.x, vector.y);
-                controller.setMiceMoved(false);
-                GameInfo.cheeseIsSet = true;
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             if (GameInfo.isPaused)
@@ -81,7 +77,7 @@ public class MazeScreen implements Screen {
             Gdx.graphics.setCursor(cursor);
         } else {
             Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            game.getBatch().draw(controller.getCheeseTexture(), controller.getCheese()[0], controller.getCheese()[1]);
+            game.getBatch().draw(cheese, controller.getCheese()[0], controller.getCheese()[1]);
         }
         controller.renderMice(game.getBatch(), elapsedTime);
         game.getBatch().end();
@@ -124,5 +120,6 @@ public class MazeScreen implements Screen {
     public void dispose() {
         controller.dispose();
         panel.dispose();
+        cheese.dispose();
     }
 }

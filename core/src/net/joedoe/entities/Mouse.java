@@ -1,7 +1,6 @@
 package net.joedoe.entities;
 
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
-import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -9,28 +8,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import net.joedoe.GameInfo;
-import net.joedoe.pathfinding.Graph;
-import net.joedoe.pathfinding.ManhattanHeuristic;
 import net.joedoe.pathfinding.Node;
 
-public class Mouse {
-    private Animation<TextureRegion>[] texture;
+public class Mouse implements MapEntity{
+    private String name;
     private float x, y;
     private int direction = 2;
-    private String name;
-    private boolean moved;
-    private Graph graph;
+    private Animation<TextureRegion>[] texture;
     private DefaultGraphPath<Node> path;
-    private ManhattanHeuristic heuristic;
     private int pathIndex = 1;
+    private boolean moved;
 
     public Mouse(String name, float x, float y) {
         this.texture = initializeTextureRegion();
         this.name = name;
         this.x = x;
         this.y = y;
-        path = new DefaultGraphPath<Node>();
-        heuristic = new ManhattanHeuristic();
     }
 
     @SuppressWarnings("unchecked")
@@ -80,20 +73,8 @@ public class Mouse {
         }
     }
 
-    public boolean calculatePath(float[] cheese) {
-        IndexedAStarPathFinder<Node> pathfinder = new IndexedAStarPathFinder<Node>(graph, true);
-        Node startNode = graph.getNodeByCoordinates(x, y);
-        Node endNode = graph.getNodeByCoordinates(cheese[0], cheese[1]);
-        pathIndex = 1;
-        path.clear();
-        return pathfinder.searchNodePath(startNode, endNode, heuristic, path);
-    }
-
     public int getDistance() {
-        int distance = 0;
-        for (int i = pathIndex - 1; i < path.getCount() - 1; i++)
-            distance++;
-        return distance;
+        return path.getCount() - pathIndex;
     }
 
     private Node getNextNode() {
@@ -104,7 +85,7 @@ public class Mouse {
         batch.draw(texture[direction - 1].getKeyFrame(elapsedTime, true), x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
     }
 
-    public void renderPath(ShapeRenderer shapeRenderer, Color color){
+    public void renderPath(ShapeRenderer shapeRenderer, Color color) {
         for (Node node : path) {
             node.render(shapeRenderer, color);
         }
@@ -114,12 +95,19 @@ public class Mouse {
         return name;
     }
 
+    @Override
     public float getX() {
         return x;
     }
 
+    @Override
     public float getY() {
         return y;
+    }
+
+    @Override
+    public int getDirection() {
+        return direction;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -131,12 +119,8 @@ public class Mouse {
         this.moved = moved;
     }
 
-
-    public void setGraph(Graph graph) {
-        this.graph = graph;
-    }
-
-    public DefaultGraphPath<Node> getPath() {
-        return path;
+    public void setPath(DefaultGraphPath<Node> path) {
+        pathIndex = 1;
+        this.path = path;
     }
 }

@@ -1,30 +1,31 @@
 package net.joedoe.controllers;
 
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import net.joedoe.GameInfo;
 import net.joedoe.entities.Mouse;
-import net.joedoe.pathfinding.GraphGenerator;
+import net.joedoe.pathfinding.Graph;
+import net.joedoe.pathfinding.ManhattanHeuristic;
+import net.joedoe.pathfinding.Node;
 
 import java.util.ArrayList;
 
 public class MazeController {
-    private TiledMap map;
-    private GraphGenerator graphGenerator;
+    private MapController mapController;
+    private Graph graph;
+    private IndexedAStarPathFinder<Node> pathfinder;
+    private ManhattanHeuristic heuristic = new ManhattanHeuristic();
     private ArrayList<Mouse> mice;
-    private Texture cheeseTexture;
     private float[] cheese;
 
     public MazeController(String path) {
-        map = new TmxMapLoader().load(path);
-        graphGenerator = new GraphGenerator(map);
-        cheeseTexture = new Texture("entities/cheese.png");
+        mapController = new MapController(path);
+        graph = mapController.generateGraph();
+        pathfinder = new IndexedAStarPathFinder<Node>(graph, true);
         initializeMice();
     }
 
@@ -45,19 +46,13 @@ public class MazeController {
     }
 
     public void setCheese(float x, float y) {
-        int tileX = (int) x / GameInfo.ONE_TILE;
-        int tileY = (int) y / GameInfo.ONE_TILE;
-        float px_X = (int) (x / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
-        float px_Y = (int) (y / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
-        if (tileIsAccessible(tileX, tileY) && !collidesWithMouse(px_X, px_Y)) {
-            cheese = new float[]{px_X, px_Y};
+        float cheeseX = ((int) x / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
+        float cheeseY = ((int) y / GameInfo.ONE_TILE) * GameInfo.ONE_TILE;
+        if (mapController.currentTileIsAccessible(x, y) && !collidesWithMouse(cheeseX, cheeseY)) {
+            cheese = new float[]{cheeseX, cheeseY};
             GameInfo.cheeseIsSet = true;
+            setMiceMoved(false);
         }
-    }
-
-    private boolean tileIsAccessible(int tileX, int tileY) {
-        Cell cell = ((TiledMapTileLayer) map.getLayers().get("top")).getCell(tileX, tileY);
-        return cell == null;
     }
 
     private boolean collidesWithMouse(float x, float y) {
@@ -71,8 +66,11 @@ public class MazeController {
     public void updateMice() {
         for (Mouse mouse : mice) {
             if (!mouse.hasMoved()) {
-                mouse.setGraph(graphGenerator.generateGraph(mouse, mice));
-                if (mouse.calculatePath(cheese)) {
+                Node startNode = graph.getNodeByCoordinates(mouse.getX(), mouse.getY());
+                Node endNode = graph.getNodeByCoordinates(cheese[0], cheese[1]);
+                DefaultGraphPath<Node> path = new DefaultGraphPath<Node>();
+                if (pathfinder.searchNodePath(startNode, endNode, heuristic, path)) {
+                    mouse.setPath(path);
                     mouse.setDirection();
                     if (mouse.getDistance() > 1)
                         mouse.move();
@@ -87,10 +85,9 @@ public class MazeController {
         }
     }
 
-    public void setMiceMoved(boolean moved) {
+    private void setMiceMoved(boolean moved) {
         for (Mouse mouse : mice)
             mouse.setMoved(moved);
-        GameInfo.cheeseIsSet = false;
     }
 
     private boolean getMiceHaveMoved() {
@@ -115,15 +112,11 @@ public class MazeController {
     }
 
     public TiledMap getMap() {
-        return map;
+        return mapController.getMap();
     }
 
     public ArrayList<Mouse> getMice() {
         return mice;
-    }
-
-    public Texture getCheeseTexture() {
-        return cheeseTexture;
     }
 
     public float[] getCheese() {
@@ -131,7 +124,6 @@ public class MazeController {
     }
 
     public void dispose() {
-        map.dispose();
-        cheeseTexture.dispose();
+        mapController.dispose();
     }
 }
