@@ -1,38 +1,21 @@
 package net.joedoe.entities;
 
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import net.joedoe.GameInfo;
 import net.joedoe.pathfinding.Node;
 
-public class Mouse implements MapEntity{
+public class Mouse implements MapEntity {
     private String name;
     private float x, y;
     private int direction = 2;
-    private Animation<TextureRegion>[] texture;
     private DefaultGraphPath<Node> path;
     private int pathIndex = 1;
     private boolean moved;
 
     public Mouse(String name, float x, float y) {
-        this.texture = initializeTextureRegion();
         this.name = name;
-        this.x = x;
-        this.y = y;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Animation<TextureRegion>[] initializeTextureRegion() {
-        TextureRegion[][] textureRegions = TextureRegion.split(new Texture("entities/mouse.png"), 38, 26);
-        Animation<TextureRegion>[] animation = new Animation[textureRegions.length];
-        for (int i = 0; i < textureRegions.length; i++)
-            animation[i] = new Animation<TextureRegion>(10f / 30f, textureRegions[i]);
-        return animation;
+        this.x = x * GameInfo.ONE_TILE;
+        this.y = y * GameInfo.ONE_TILE;
     }
 
     public void setDirection() {
@@ -81,18 +64,12 @@ public class Mouse implements MapEntity{
         return path.nodes.get(pathIndex);
     }
 
-    public void render(SpriteBatch batch, float elapsedTime) {
-        batch.draw(texture[direction - 1].getKeyFrame(elapsedTime, true), x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
-    }
-
-    public void renderPath(ShapeRenderer shapeRenderer, Color color) {
-        for (Node node : path) {
-            node.render(shapeRenderer, color);
-        }
-    }
-
     public String getName() {
         return name;
+    }
+
+    public DefaultGraphPath<Node> getPath() {
+        return path;
     }
 
     @Override

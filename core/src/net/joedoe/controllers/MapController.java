@@ -16,7 +16,6 @@ class MapController {
         map = new TmxMapLoader().load(path);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean currentTileIsAccessible(float x, float y) {
         Cell cell = ((TiledMapTileLayer) map.getLayers().get("top")).getCell((int) x / GameInfo.ONE_TILE, (int) y / GameInfo.ONE_TILE);
         return cell == null;

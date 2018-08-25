@@ -13,7 +13,7 @@ public class Graph implements IndexedGraph<Node> {
     }
 
     public Node getNodeByCoordinates(float x, float y) {
-        return nodes.get((int) x / GameInfo.ONE_TILE + GraphGenerator.mapWidth * (int) y / GameInfo.ONE_TILE);
+        return nodes.get((int) x / GameInfo.ONE_TILE + GameInfo.MAP_WIDTH * (int) y / GameInfo.ONE_TILE);
     }
 
     @Override
