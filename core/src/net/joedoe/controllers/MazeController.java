@@ -30,6 +30,8 @@ public class MazeController {
         mice = new ArrayList<Mouse>();
         mice.add(new Mouse("Pinky", 39, 4));
         mice.add(new Mouse("The Brain", 39, 23));
+//        mice.add(new Mouse("Another Pinky", 0, 4));
+//        mice.add(new Mouse("Another Brain", 1, 23));
     }
 
     public void setCheese(float x, float y) {

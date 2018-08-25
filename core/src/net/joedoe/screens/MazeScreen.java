@@ -115,9 +115,11 @@ public class MazeScreen implements Screen {
 
     private void renderMicePath() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        Color[] colors = new Color[2];
+        Color[] colors = new Color[4];
         colors[0] = Color.RED;
         colors[1] = Color.YELLOW;
+        colors[2] = Color.GREEN;
+        colors[3] = Color.BLUE;
         int index = 0;
         for (Mouse mouse : controller.getMice()) {
             for (Node node : mouse.getPath()) {
