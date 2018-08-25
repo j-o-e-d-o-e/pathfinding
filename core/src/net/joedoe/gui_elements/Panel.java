@@ -19,7 +19,7 @@ public class Panel {
     private Label cheese, mouse1, mouse2;
 
     public Panel(GameMain game) {
-        Viewport viewport = new FitViewport(GameInfo.WIDTH, GameInfo.HEIGHT, new OrthographicCamera());
+        Viewport viewport = new FitViewport(GameInfo.MAP_WIDTH_PX, GameInfo.MAP_HEIGHT_PX, new OrthographicCamera());
         stage = new Stage(viewport, game.getBatch());
         Gdx.input.setInputProcessor(stage);
         createTable();

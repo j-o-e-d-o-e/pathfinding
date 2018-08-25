@@ -35,9 +35,9 @@ public class MazeScreen implements Screen {
     public MazeScreen(GameMain game) {
         this.game = game;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, GameInfo.WIDTH, GameInfo.HEIGHT);
-        camera.position.set(GameInfo.WIDTH / 2f, GameInfo.HEIGHT / 2f, 0);
-        viewport = new StretchViewport(GameInfo.WIDTH, GameInfo.HEIGHT, camera);
+        camera.setToOrtho(false, GameInfo.MAP_WIDTH_PX, GameInfo.MAP_HEIGHT_PX);
+        camera.position.set(GameInfo.MAP_WIDTH_PX / 2f, GameInfo.MAP_HEIGHT_PX / 2f, 0);
+        viewport = new StretchViewport(GameInfo.MAP_WIDTH_PX, GameInfo.MAP_HEIGHT_PX, camera);
         controller = new MazeController("maps/maze.tmx");
         panel = new Panel(this.game);
         renderer = new OrthogonalTiledMapRenderer(controller.getMap());

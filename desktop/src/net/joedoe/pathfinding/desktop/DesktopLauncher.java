@@ -9,8 +9,8 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Mice in a Maze";
-        config.width = GameInfo.WIDTH;
-        config.height = GameInfo.HEIGHT;
+        config.width = GameInfo.MAP_WIDTH_PX;
+        config.height = GameInfo.MAP_HEIGHT_PX;
         new LwjglApplication(new GameMain(), config);
     }
 }

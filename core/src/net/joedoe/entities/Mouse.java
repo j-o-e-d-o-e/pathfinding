@@ -35,8 +35,8 @@ public class Mouse implements MapEntity {
         switch (direction) {
             case 1: // N
                 y += GameInfo.ONE_TILE;
-                if (y > GameInfo.HEIGHT - GameInfo.ONE_TILE)
-                    y = GameInfo.HEIGHT - GameInfo.ONE_TILE;
+                if (y > GameInfo.MAP_HEIGHT_PX - GameInfo.ONE_TILE)
+                    y = GameInfo.MAP_HEIGHT_PX - GameInfo.ONE_TILE;
                 break;
             case 2: // W
                 x -= GameInfo.ONE_TILE;
@@ -50,8 +50,8 @@ public class Mouse implements MapEntity {
                 break;
             case 4: // E
                 x += GameInfo.ONE_TILE;
-                if (x > GameInfo.WIDTH - GameInfo.ONE_TILE)
-                    x = GameInfo.WIDTH - GameInfo.ONE_TILE;
+                if (x > GameInfo.MAP_WIDTH_PX - GameInfo.ONE_TILE)
+                    x = GameInfo.MAP_WIDTH_PX - GameInfo.ONE_TILE;
                 break;
         }
     }
