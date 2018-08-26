@@ -88,11 +88,11 @@ public class MazeScreen implements Screen {
         renderer.render();
         renderer.setView(camera);
         game.getBatch().begin();
-        if (!GameInfo.cheeseIsSet) {
-            Gdx.graphics.setCursor(cursor);
-        } else {
-            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+        if (GameInfo.cheeseIsSet) {
             game.getBatch().draw(cheese, controller.getCheese()[0], controller.getCheese()[1]);
+            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+        } else {
+            Gdx.graphics.setCursor(cursor);
         }
         renderMice();
         game.getBatch().end();

@@ -7,15 +7,15 @@ import net.joedoe.pathfinding.Node;
 public class Mouse implements MapEntity {
     private String name;
     private float x, y;
-    private int direction = 2;
+    private int direction;
     private DefaultGraphPath<Node> path;
     private int pathIndex = 1;
-    private boolean moved;
 
-    public Mouse(String name, float x, float y) {
+    public Mouse(String name, float x, float y, int direction) {
         this.name = name;
         this.x = x * GameInfo.ONE_TILE;
         this.y = y * GameInfo.ONE_TILE;
+        this.direction = direction;
     }
 
     public void setDirection() {
@@ -85,15 +85,6 @@ public class Mouse implements MapEntity {
     @Override
     public int getDirection() {
         return direction;
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean hasMoved() {
-        return moved;
-    }
-
-    public void setMoved(boolean moved) {
-        this.moved = moved;
     }
 
     public void setPath(DefaultGraphPath<Node> path) {

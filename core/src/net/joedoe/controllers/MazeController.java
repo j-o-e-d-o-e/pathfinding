@@ -28,10 +28,10 @@ public class MazeController {
 
     private void initializeMice() {
         mice = new ArrayList<Mouse>();
-        mice.add(new Mouse("Pinky", 39, 4));
-        mice.add(new Mouse("The Brain", 39, 23));
-//        mice.add(new Mouse("Another Pinky", 0, 4));
-//        mice.add(new Mouse("Another Brain", 1, 23));
+        mice.add(new Mouse("Pinky", 39, 4, 2));
+        mice.add(new Mouse("The Brain", 39, 23, 2));
+//        mice.add(new Mouse("Another Pinky", 0, 4, 4));
+//        mice.add(new Mouse("Another Brain", 1, 23, 4));
     }
 
     public void setCheese(float x, float y) {
@@ -40,8 +40,6 @@ public class MazeController {
         if (mapController.currentTileIsAccessible(x, y) && !collides(cheeseX, cheeseY)) {
             cheese = new float[]{cheeseX, cheeseY};
             GameInfo.cheeseIsSet = true;
-            for (Mouse mouse : mice)
-                mouse.setMoved(false);
         }
     }
 
@@ -69,8 +67,6 @@ public class MazeController {
                 if (collides(nextTile[0], nextTile[1]))
                     continue;
                 if (mouse.getDistance() == 1) {
-                    for (Mouse m : mice)
-                        m.setMoved(true);
                     GameInfo.cheeseIsSet = false;
                     return;
                 }

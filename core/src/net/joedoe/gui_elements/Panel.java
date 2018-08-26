@@ -47,9 +47,9 @@ public class Panel {
         if (GameInfo.cheeseIsSet) {
             int cheeseX = (int) cheese[0] / GameInfo.ONE_TILE;
             int cheeseY = (int) cheese[1] / GameInfo.ONE_TILE;
-            this.cheese.setText("CHEESE: " + cheeseX + "/" + cheeseY);
+            this.cheese.setText("Cheese: " + cheeseX + "/" + cheeseY);
         } else {
-            this.cheese.setText("CHEESE: ??/??");
+            this.cheese.setText("Cheese: ??/??");
         }
         Mouse mouse1 = mice.get(0);
         int x1 = (int) mouse1.getX() / GameInfo.ONE_TILE;
@@ -65,7 +65,7 @@ public class Panel {
     }
 
     public Stage getStage() {
-        return this.stage;
+        return stage;
     }
 
     public void dispose() {
