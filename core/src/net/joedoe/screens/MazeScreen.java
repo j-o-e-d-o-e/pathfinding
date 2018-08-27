@@ -23,12 +23,12 @@ public class MazeScreen implements Screen {
     private GameMain game;
     private OrthographicCamera camera;
     private Viewport viewport;
-    private OrthogonalTiledMapRenderer renderer;
+    private OrthogonalTiledMapRenderer mapRenderer;
     private ShapeRenderer shapeRenderer;
     private MazeController controller;
     private Panel panel;
     private Cursor cursor;
-    private Texture cheese;
+    private Texture cheeseTexture;
     private Animation<TextureRegion>[] animation;
     private float mouseTimer;
 
@@ -40,9 +40,9 @@ public class MazeScreen implements Screen {
         viewport = new StretchViewport(GameInfo.MAP_WIDTH_PX, GameInfo.MAP_HEIGHT_PX, camera);
         controller = new MazeController("maps/maze.tmx");
         panel = new Panel(this.game);
-        renderer = new OrthogonalTiledMapRenderer(controller.getMap());
+        mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap());
         cursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("entities/cheese.png")), 15, 15);
-        cheese = new Texture("entities/cheese.png");
+        cheeseTexture = new Texture("entities/cheese.png");
         animation = createMouseAnimation();
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getBatch().getProjectionMatrix());
@@ -78,11 +78,11 @@ public class MazeScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        renderer.render();
-        renderer.setView(camera);
+        mapRenderer.render();
+        mapRenderer.setView(camera);
         game.getBatch().begin();
         if (GameInfo.cheeseIsSet) {
-            game.getBatch().draw(cheese, controller.getCheese()[0], controller.getCheese()[1]);
+            game.getBatch().draw(cheeseTexture, controller.getCheese()[0], controller.getCheese()[1]);
             Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
         } else {
             Gdx.graphics.setCursor(cursor);
@@ -107,24 +107,24 @@ public class MazeScreen implements Screen {
     }
 
     private void renderMicePath() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         Color[] colors = new Color[4];
         colors[0] = Color.RED;
         colors[1] = Color.YELLOW;
         colors[2] = Color.GREEN;
         colors[3] = Color.BLUE;
-        int index = 0;
+        int colorIndex = 0;
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Mouse mouse : controller.getMice()) {
             for (Node node : mouse.getPath()) {
                 int x = node.getX() * GameInfo.ONE_TILE;
                 int y = node.getY() * GameInfo.ONE_TILE;
-                shapeRenderer.setColor(colors[index]);
+                shapeRenderer.setColor(colors[colorIndex]);
                 shapeRenderer.line(x, y, x, y + GameInfo.ONE_TILE);
                 shapeRenderer.line(x + GameInfo.ONE_TILE, y, x + GameInfo.ONE_TILE, y + GameInfo.ONE_TILE);
                 shapeRenderer.line(x, y, x + GameInfo.ONE_TILE, y);
                 shapeRenderer.line(x, y + GameInfo.ONE_TILE, x + GameInfo.ONE_TILE, y + GameInfo.ONE_TILE);
             }
-            index++;
+            colorIndex++;
         }
         shapeRenderer.end();
     }
@@ -155,6 +155,6 @@ public class MazeScreen implements Screen {
         controller.dispose();
         panel.dispose();
         cursor.dispose();
-        cheese.dispose();
+        cheeseTexture.dispose();
     }
 }
