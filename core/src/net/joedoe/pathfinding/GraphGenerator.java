@@ -6,23 +6,24 @@ import com.badlogic.gdx.utils.Array;
 import net.joedoe.GameInfo;
 
 public class GraphGenerator {
-    private TiledMap map;
-    private Array<Node> nodes = new Array<Node>();
 
-    public GraphGenerator(TiledMap map) {
-        this.map = map;
-        createBasicArray();
+    public static Graph generateGraph(TiledMap map){
+        Array<Node> nodes = createArray();
+        addConnections(map, nodes);
+        return new Graph(nodes);
     }
 
-    private void createBasicArray() {
+    private static Array<Node> createArray() {
+        Array<Node> nodes = new Array<Node>();
         int index = 0;
         for (int y = 0; y < GameInfo.MAP_HEIGHT; y++) {
             for (int x = 0; x < GameInfo.MAP_WIDTH; x++)
                 nodes.add(new Node(x, y, index++));
         }
+        return nodes;
     }
 
-    public Graph generateGraph() {
+    private static void addConnections(TiledMap map, Array<Node> nodes) {
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("top");
         for (int y = 0; y < GameInfo.MAP_HEIGHT; y++) {
             for (int x = 0; x < GameInfo.MAP_WIDTH; x++) {
@@ -39,6 +40,5 @@ public class GraphGenerator {
                 }
             }
         }
-        return new Graph(nodes);
     }
 }

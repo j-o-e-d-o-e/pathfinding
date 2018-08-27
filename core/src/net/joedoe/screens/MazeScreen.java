@@ -30,7 +30,7 @@ public class MazeScreen implements Screen {
     private Cursor cursor;
     private Texture cheese;
     private Animation<TextureRegion>[] animation;
-    private float mouseTimer, elapsedTime;
+    private float mouseTimer;
 
     public MazeScreen(GameMain game) {
         this.game = game;
@@ -43,13 +43,13 @@ public class MazeScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(controller.getMap());
         cursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("entities/cheese.png")), 15, 15);
         cheese = new Texture("entities/cheese.png");
-        animation = initializeMouseAnimation();
+        animation = createMouseAnimation();
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(game.getBatch().getProjectionMatrix());
     }
 
     @SuppressWarnings("unchecked")
-    private Animation<TextureRegion>[] initializeMouseAnimation() {
+    private Animation<TextureRegion>[] createMouseAnimation() {
         TextureRegion[][] textureRegions = TextureRegion.split(new Texture("entities/mouse.png"), 38, 26);
         Animation<TextureRegion>[] animation = new Animation[textureRegions.length];
         for (int i = 0; i < textureRegions.length; i++)
@@ -58,25 +58,18 @@ public class MazeScreen implements Screen {
     }
 
     private void handleInput() {
-        if (!GameInfo.cheeseIsSet) {
-            if (Gdx.input.justTouched()) {
-                Vector3 vector = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-                camera.unproject(vector);
-                controller.setCheese(vector.x, vector.y);
-            }
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            if (GameInfo.isPaused)
-                GameInfo.isPaused = false;
-            else if (!GameInfo.isPaused)
-                GameInfo.isPaused = true;
-        }
+        if (!GameInfo.cheeseIsSet && Gdx.input.justTouched()) {
+            Vector3 vector = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(vector);
+            controller.setCheese(vector.x, vector.y);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P))
+            GameInfo.isPaused = !GameInfo.isPaused;
     }
 
     @Override
     public void render(float delta) {
-        mouseTimer += delta;
-        elapsedTime += delta;
         handleInput();
+        mouseTimer += delta;
         if (GameInfo.cheeseIsSet && !GameInfo.isPaused && mouseTimer >= 0.2) {
             controller.updateMice();
             mouseTimer = 0;
@@ -109,7 +102,7 @@ public class MazeScreen implements Screen {
             float x = mouse.getX();
             float y = mouse.getY();
             int direction = mouse.getDirection() - 1;
-            game.getBatch().draw(animation[direction].getKeyFrame(elapsedTime, true), x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
+            game.getBatch().draw(animation[direction].getKeyFrame(mouseTimer, true), x, y, GameInfo.ONE_TILE, GameInfo.ONE_TILE);
         }
     }
 

@@ -53,25 +53,29 @@ public class MazeController {
 
     public void updateMice() {
         for (Mouse mouse : mice) {
-            Node startNode = graph.getNodeByCoordinates(mouse.getX(), mouse.getY());
-            Node endNode = graph.getNodeByCoordinates(cheese[0], cheese[1]);
-            DefaultGraphPath<Node> path = new DefaultGraphPath<Node>();
-            if (pathfinder.searchNodePath(startNode, endNode, heuristic, path)) {
+            if (mouse.getPath() == null) {
+                Node startNode = graph.getNodeByCoordinates(mouse.getX(), mouse.getY());
+                Node endNode = graph.getNodeByCoordinates(cheese[0], cheese[1]);
+                DefaultGraphPath<Node> path = new DefaultGraphPath<Node>();
+                pathfinder.searchNodePath(startNode, endNode, heuristic, path);
                 mouse.setPath(path);
-                mouse.setDirection();
-                float[] nextTile = mapController.getCoordinatesOfNextTile(mouse);
-                if (mouse.getDistance() > 1 && !collides(nextTile[0], nextTile[1])) {
-                    mouse.move();
-                    continue;
-                }
-                if (collides(nextTile[0], nextTile[1]))
-                    continue;
-                if (mouse.getDistance() == 1) {
-                    GameInfo.cheeseIsSet = false;
-                    return;
-                }
+            }
+            mouse.setDirection();
+            float[] nextTile = mapController.getCoordinatesOfNextTile(mouse);
+            if (mouse.getDistance() > 1 && !collides(nextTile[0], nextTile[1])) {
+                mouse.move();
+                continue;
+            }
+            if (collides(nextTile[0], nextTile[1]))
+                continue;
+            if (mouse.getDistance() == 1) {
+                GameInfo.cheeseIsSet = false;
+                for (Mouse m : mice)
+                    m.setPath(null);
+                return;
             }
         }
+
     }
 
     public TiledMap getMap() {

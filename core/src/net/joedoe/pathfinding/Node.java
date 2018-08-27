@@ -8,13 +8,12 @@ public class Node implements Connection<Node> {
     private final int x;
     private final int y;
     private int index;
-    private Array<Connection<Node>> connections;
+    private Array<Connection<Node>> connections = new Array<Connection<Node>>();
 
     Node(int x, int y, int index) {
         this.index = index;
         this.x = x;
         this.y = y;
-        connections = new Array<Connection<Node>>();
     }
 
     public int getX() {

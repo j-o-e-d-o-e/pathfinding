@@ -41,7 +41,7 @@ class MapController {
     }
 
     Graph generateGraph() {
-        return new GraphGenerator(map).generateGraph();
+        return GraphGenerator.generateGraph(map);
     }
 
     TiledMap getMap() {
